@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Digital Scrapbook</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=Special+Elite&display=swap"
+    rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <link rel="stylesheet" href="/static/style.css" />
+  <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
+</head>
+
+<body>
+
+  <!-- SVG Glass filters — inline, display:none, referenced via filter:url(#id) -->
+  <svg style="display:none" xmlns="http://www.w3.org/2000/svg">
+    <!-- Organic ripple for cards & panels -->
+    <filter id="glass-ripple" x="-8%" y="-8%" width="116%" height="116%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.0055 0.0055" numOctaves="2" seed="73" result="noise" />
+      <feGaussianBlur in="noise" stdDeviation="0.018" result="blurNoise" />
+      <feDisplacementMap in="SourceGraphic" in2="blurNoise" scale="62" xChannelSelector="R" yChannelSelector="G" />
+    </filter>
+    <!-- Stronger lens for FAB -->
+    <filter id="glass-lens" x="-12%" y="-12%" width="124%" height="124%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.009 0.009" numOctaves="3" seed="17" result="noise" />
+      <feGaussianBlur in="noise" stdDeviation="0.025" result="blurNoise" />
+      <feDisplacementMap in="SourceGraphic" in2="blurNoise" scale="90" xChannelSelector="R" yChannelSelector="G" />
+    </filter>
+  </svg>
+
+  <!-- HEADER -->
+  <header class="book-header">
+    <div class="corner-ornament tl">❧</div>
+    <div class="corner-ornament tr">❧</div>
+    <div class="header-inner">
+      <h1 class="book-title">✦ Digital <em>Scrapbook</em> ✦</h1>
+      <p class="book-dates" id="bookDates">Your memories, curated</p>
+    </div>
+  </header>
+
+  <!-- BOOK BODY -->
+  <main class="book-body">
+    <div class="spine"></div>
+    <section class="posts-grid" id="postsGrid">
+      <div class="empty-state" id="emptyState">
+        <div class="empty-doodle">📖</div>
+        <p>Your scrapbook is empty…<br />Add your first memory!</p>
+      </div>
+    </section>
+  </main>
+
+  <!-- FAB -->
+  <button class="fab" id="fabBtn" title="Add memory">
+    <span class="fab-icon">+</span>
+  </button>
+
+  <!-- ADD POST MODAL -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal scrapbook-modal">
+      <button class="modal-close" id="modalClose">✕</button>
+      <h2 class="modal-title">📌 New Memory</h2>
+
+      <div class="form-group">
+        <label>Link <span class="req">*</span></label>
+        <input type="url" id="inputUrl" placeholder="https://youtube.com/watch?v=…" autocomplete="off" />
+        <small>YouTube, Instagram, website – any URL</small>
+      </div>
+
+      <div class="form-group">
+        <label>Photo / Logo for QR center</label>
+        <div class="image-drop-area" id="dropArea">
+          <input type="file" id="imageFile" accept="image/*" hidden />
+          <div class="drop-hint" id="dropHint">
+            <span>🖼️</span>
+            <p>Drag & drop or <button type="button" class="link-btn" id="browseBtn">browse</button></p>
+            <small>PNG, JPG, GIF · Max 5MB</small>
+          </div>
+          <img id="imagePreview" class="image-preview" hidden />
+          <button type="button" class="remove-img" id="removeImg" hidden>✕ Remove</button>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Title</label>
+        <input type="text" id="inputTitle" placeholder="Morning fuels! ☕" maxlength="60" />
+      </div>
+
+      <div class="form-group">
+        <label>Description / Caption</label>
+        <textarea id="inputDesc" rows="3" placeholder="Amazing atmosphere! Best latte ever…"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>Tags</label>
+        <input type="text" id="inputTags" placeholder="coffee, vibes, monday" />
+        <small>Comma-separated</small>
+      </div>
+
+      <div class="form-actions">
+        <button class="btn-cancel" id="btnCancel">Cancel</button>
+        <button class="btn-submit" id="btnSubmit">
+          <span id="submitLabel">Stick it in! 📎</span>
+          <span id="submitSpinner" hidden>Generating QR…</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- LIQUID CANVAS + CURSOR -->
+  <canvas id="liquidCanvas"></canvas>
+  <div class="cursor-glow" id="cursorGlow"></div>
+
+  <!-- QR generator (off-screen) -->
+  <div id="qrGen" style="position:absolute;top:-9999px;left:-9999px;width:300px;height:300px;"></div>
+
+  <script src="/static/script.js"></script>
+</body>
+
+</html>
